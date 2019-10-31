@@ -7,6 +7,17 @@ const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 require('dotenv').config();
 
+const mongoose = require('mongoose');
+mongoose.connect(process.env.DATABASE_URL, {
+  useNewUrlParser: true,
+  useFindAndModify: false,
+  useUnifiedTopology: true
+});
+
+const db = mongoose.connection;
+db.once('open', console.log.bind(console, 'connected'));
+db.on('error', console.error.bind(console, 'connection error'));
+
 const app = express();
 app.use(logger('dev'));
 app.use(cors());
