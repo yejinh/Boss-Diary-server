@@ -5,7 +5,6 @@ const { vaildEmail } = require('../../../constants/regex');
 exports.authenticate = async (req, res, next) => {
   try {
     const { email, name, picture } = req.body;
-    console.log(email, name, picture);
 
     if (!vaildEmail.test(email)) {
       throw new Error('Invaild email');
@@ -23,7 +22,17 @@ exports.authenticate = async (req, res, next) => {
       }).save();
 
       const { _id } = userData;
-      const token = jwt.sign({ email, name, _id }, process.env.SECRET_KEY, { expiresIn: '7d' });
+      const token = jwt.sign(
+        {
+          email,
+          name,
+          _id
+        },
+        process.env.SECRET_KEY,
+        {
+          expiresIn: '7d'
+        }
+      );
 
       return res.json({
         message: 'logged in successfully',
@@ -31,7 +40,17 @@ exports.authenticate = async (req, res, next) => {
       });
     }
 
-    const token = jwt.sign({ email, name, _id: user._id }, process.env.SECRET_KEY, { expiresIn: '7d' });
+    const token = jwt.sign(
+      {
+        email,
+        name,
+        _id: user._id
+      },
+      process.env.SECRET_KEY,
+      {
+        expiresIn: '7d'
+      }
+    );
 
     res.json({
       message: 'logged in successfully',
