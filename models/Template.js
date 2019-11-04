@@ -8,6 +8,10 @@ const templateSchema = new mongoose.Schema({
   url: {
     type: String,
     required: true
+  },
+  points: {
+    type: Number,
+    required: true
   }
 });
 
