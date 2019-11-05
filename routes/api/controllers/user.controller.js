@@ -1,17 +1,27 @@
-const AWS = require('aws-sdk');
 const User = require('../../../models/User');
-const Template = require('../../../models/Template');
+const AWS = require('aws-sdk');
+const multer = require('multer');
+const multerS3 = require('multer-s3');
 require('dotenv').config();
 
-const s3 = new AWS.S3( {
+AWS.config.update({
   accessKeyId:  process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
   region: process.env.AWS_REGION
 });
 
+const s3 = new AWS.S3();
+
+// const upload = multer({
+//   storage: multerS3({
+//     bucket
+//   })
+// })
+
 exports.getObjects = function (req, res) {
   var item = req.body;
   var params = { Bucket: req.params.bucketName };
+
   s3.getObject(params, function (err, data) {
     if (err) {
       return res.send({ "error": err });
@@ -56,6 +66,14 @@ exports.getUserTemplates = async(req, res, next) => {
       message: 'User templates loaded successfully',
       templates: user.templates
     });
+  } catch(err) {
+    next(new Error(err));
+  }
+};
+
+exports.create = async(req, res, next) => {
+  try {
+    console.log(req.body);
   } catch(err) {
     next(new Error(err));
   }
