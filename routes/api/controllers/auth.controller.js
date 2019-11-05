@@ -36,6 +36,7 @@ exports.authenticate = async (req, res, next) => {
 
       return res.json({
         message: 'logged in successfully',
+        user_id: _id,
         access_token: token
       });
     }
@@ -54,6 +55,7 @@ exports.authenticate = async (req, res, next) => {
 
     res.json({
       message: 'logged in successfully',
+      user_id: user._id,
       access_token: token
     });
   } catch(err) {

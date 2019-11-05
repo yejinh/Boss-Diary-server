@@ -18,19 +18,21 @@ exports.getObjects = function (req, res) {
     }
     res.send({ data });
   });
-}
+};
 
 exports.getOne = (req, res) => {
   res.json({
     message: 'User Found successfully',
     userData: res.locals.userData
   });
-}
+};
 
 exports.update = async(req, res) => {
   try {
-    const { userId, templateId } = req.body;
-
+    const userId = req.params.user_id;
+    const { templateId, price } = req.body;
+// 템플릿 가격 빼주기
+// 중복 체크 한번 더
     await User.update(
       {
         _id: userId
@@ -44,4 +46,17 @@ exports.update = async(req, res) => {
   } catch(err) {
     next(new Error(err));
   }
-}
+};
+
+exports.getUserTemplates = async(req, res, next) => {
+  try {
+    const user = await User.findOne({ _id: req.params.user_id }).populate('templates');
+
+    res.json({
+      message: 'User templates loaded successfully',
+      templates: user.templates
+    });
+  } catch(err) {
+    next(new Error(err));
+  }
+};

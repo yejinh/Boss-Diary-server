@@ -1,6 +1,6 @@
 const Template = require('../../../models/Template');
 
-exports.getAll = async (req, res) => {
+exports.getAll = async(req, res, next) => {
   try {
     const templates = await Template.find();
 
@@ -12,4 +12,4 @@ exports.getAll = async (req, res) => {
   } catch(err) {
     next(new Error(err));
   }
-}
+};

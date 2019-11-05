@@ -27,7 +27,8 @@ const userSchema = new mongoose.Schema({
   ],
   templates: [
     {
-      type: String,
+      type: ObjectId,
+      ref: 'Template',
       required: true
     }
   ]
