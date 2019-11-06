@@ -1,34 +1,7 @@
 const User = require('../../../models/User');
+const Report = require('../../../models/Report');
 const AWS = require('aws-sdk');
-const multer = require('multer');
-const multerS3 = require('multer-s3');
 require('dotenv').config();
-
-AWS.config.update({
-  accessKeyId:  process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-  region: process.env.AWS_REGION
-});
-
-const s3 = new AWS.S3();
-
-// const upload = multer({
-//   storage: multerS3({
-//     bucket
-//   })
-// })
-
-exports.getObjects = function (req, res) {
-  var item = req.body;
-  var params = { Bucket: req.params.bucketName };
-
-  s3.getObject(params, function (err, data) {
-    if (err) {
-      return res.send({ "error": err });
-    }
-    res.send({ data });
-  });
-};
 
 exports.getOne = (req, res) => {
   res.json({
@@ -41,8 +14,8 @@ exports.update = async(req, res) => {
   try {
     const userId = req.params.user_id;
     const { templateId, price } = req.body;
-// 템플릿 가격 빼주기
-// 중복 체크 한번 더
+    // 템플릿 가격 빼주기
+    // 중복 체크 한번 더
     await User.update(
       {
         _id: userId
@@ -73,7 +46,45 @@ exports.getUserTemplates = async(req, res, next) => {
 
 exports.create = async(req, res, next) => {
   try {
-    console.log(req.body);
+    const userId = req.params.user_id;
+    const { text, templateId, date } = req.body;
+
+    const type = 'jpg';
+    const buffer = req.files.photo[0].buffer;
+
+    const s3 = new AWS.S3({
+      accessKeyId:  process.env.AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+      region: process.env.AWS_REGION
+    });
+
+    const params = {
+      Bucket: process.env.AWS_BUCKET,
+      Key: `photos/${userId}_${date}`,
+      Body: buffer,
+      ACL: 'public-read',
+      ContentEncoding: 'base64',
+      ContentType: `image/${type}`
+    };
+
+    s3.upload(params, (err, data) => {
+      if (err) {
+        throw new Error('s3 upload failed');
+      }
+      const photoUrl = data.Location;
+      saveReport(photoUrl);
+    });
+
+    const saveReport = async(photoUrl) => {
+      await new Report({
+        title: 'test',
+        body: text,
+        url: photoUrl,
+        templateId
+      }).save();
+
+      res.json({ message: 'Report uploaded successfully '});
+    }
   } catch(err) {
     next(new Error(err));
   }
