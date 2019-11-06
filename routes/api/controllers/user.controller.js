@@ -10,22 +10,14 @@ exports.getOne = (req, res) => {
   });
 };
 
-exports.update = async(req, res) => {
+exports.getUserReports = async(req, res, next) => {
   try {
-    const userId = req.params.user_id;
-    const { templateId, price } = req.body;
-    // 템플릿 가격 빼주기
-    // 중복 체크 한번 더
-    await User.update(
-      {
-        _id: userId
-      },
-      {
-        $addToSet: { templates : templateId }
-      }
-    );
+    const user = await User.findOne({ _id: req.params.user_id }).populate('reports');
 
-    res.json({ res: user });
+    res.json({
+      message: 'User templates loaded successfully',
+      reports: user.reports
+    });
   } catch(err) {
     next(new Error(err));
   }
@@ -76,15 +68,47 @@ exports.create = async(req, res, next) => {
     });
 
     const saveReport = async(photoUrl) => {
-      await new Report({
+      const newReport = await new Report({
         title: 'test',
         body: text,
         url: photoUrl,
         templateId
       }).save();
 
+      const user = await User.updateOne(
+        {
+          _id: userId
+        },
+        {
+          $addToSet: { reports : newReport._id },
+          $inc: { points: 5 }
+        }
+      );
+
       res.json({ message: 'Report uploaded successfully '});
     }
+  } catch(err) {
+    next(new Error(err));
+  }
+};
+
+exports.addTemplate = async(req, res) => {
+  try {
+    const userId = req.params.user_id;
+    const { templateId, price } = req.body;
+    // 템플릿 가격 빼주기
+    // 중복 체크 한번 더
+    await User.updateOne(
+      {
+        _id: userId
+      },
+      {
+        $addToSet: { templates : templateId },
+        $inc: { points: -price }
+      }
+    );
+
+    res.json({ res: user });
   } catch(err) {
     next(new Error(err));
   }
