@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  profilePhoto: {
+  profile_photo: {
     type: String,
     required: true
   },

@@ -12,11 +12,25 @@ exports.getOne = (req, res) => {
 
 exports.getUserReports = async(req, res, next) => {
   try {
-    const user = await User.findOne({ _id: req.params.user_id }).populate('reports');
+    const pageNumber = parseInt(req.query.page_number);
+    const pageSize =  parseInt(req.query.page_size);
+
+    const reports = await Report
+    .find({ created_by: req.params.user_id })
+    .sort({ created_at: 'desc' })
+    .skip((pageNumber - 1) * pageSize)
+    .limit(pageSize);
+
+    if (!reports.length) {
+      return res.json({
+        message: 'No report found',
+        reports: []
+      });
+    }
 
     res.json({
       message: 'User templates loaded successfully',
-      reports: user.reports
+      reports: reports
     });
   } catch(err) {
     next(new Error(err));
@@ -69,10 +83,11 @@ exports.create = async(req, res, next) => {
 
     const saveReport = async(photoUrl) => {
       const newReport = await new Report({
+        created_by: userId,
         title: 'test',
         body: text,
         url: photoUrl,
-        templateId
+        template_id: templateId
       }).save();
 
       const user = await User.updateOne(

@@ -16,7 +16,7 @@ exports.authenticate = async (req, res, next) => {
       const userData = await new User({
         name,
         email,
-        profilePhoto: picture.data.url,
+        profile_photo: picture.data.url,
         resports: [],
         templates: []
       }).save();
