@@ -10,7 +10,22 @@ exports.getOne = (req, res) => {
   });
 };
 
-exports.getUserReports = async(req, res, next) => {
+exports.getAllReports = async(req, res, next) => {
+  try {
+    const reports = await Report
+    .find({ created_by: req.params.user_id })
+    .sort({ created_at: 'desc' });
+
+    res.json({
+      message: 'User templates loaded successfully',
+      reports: reports
+    });
+  } catch(err) {
+    next(new Error(err));
+  }
+}
+
+exports.getPaginationReports = async(req, res, next) => {
   try {
     const pageNumber = parseInt(req.query.page_number);
     const pageSize =  parseInt(req.query.page_size);
