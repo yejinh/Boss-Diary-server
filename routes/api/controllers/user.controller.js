@@ -29,11 +29,12 @@ exports.getPaginationReports = async(req, res, next) => {
   try {
     const pageNumber = parseInt(req.query.page_number);
     const pageSize =  parseInt(req.query.page_size);
+    const skipPage = parseInt(req.query.skip_page);
 
     const reports = await Report
     .find({ created_by: req.params.user_id })
     .sort({ created_at: 'desc' })
-    .skip((pageNumber - 1) * pageSize)
+    .skip((pageNumber - 1) * pageSize + skipPage)
     .limit(pageSize);
 
     if (!reports.length) {
@@ -105,7 +106,7 @@ exports.create = async(req, res, next) => {
         template_id: templateId
       }).save();
 
-      const user = await User.updateOne(
+      await User.updateOne(
         {
           _id: userId
         },
@@ -115,7 +116,10 @@ exports.create = async(req, res, next) => {
         }
       );
 
-      res.json({ message: 'Report uploaded successfully '});
+      res.json({
+        message: 'Report uploaded successfully',
+        newReport: newReport
+      });
     }
   } catch(err) {
     next(new Error(err));
