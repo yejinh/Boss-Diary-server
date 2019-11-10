@@ -7,6 +7,7 @@ router.get('/:user_id', ensureLoggedIn, userController.getOne);
 router.get('/email/:email', ensureLoggedIn, userController.getOneByEmail);
 router.get('/:user_id/reports', ensureLoggedIn, userController.getAllReports);
 router.get('/:user_id/reports/page', ensureLoggedIn, userController.getPaginationReports);
+router.get('/:user_id/reports/requests/page', ensureLoggedIn, userController.getPaginationRequests);
 router.get('/:user_id/templates', ensureLoggedIn, userController.getUserTemplates);
 router.post('/:user_id/reports', ensureLoggedIn, uploadS3, userController.create);
 router.put('/:user_id/templates', ensureLoggedIn, userController.addTemplate);

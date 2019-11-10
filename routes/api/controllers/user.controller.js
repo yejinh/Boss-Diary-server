@@ -39,8 +39,8 @@ exports.getOneByEmail = async(req, res, next) => {
 exports.getAllReports = async(req, res, next) => {
   try {
     const reports = await Report
-    .find({ created_by: req.params.user_id })
-    .sort({ created_at: 'desc' });
+      .find({ created_by: req.params.user_id })
+      .sort({ created_at: 'desc' });
 
     res.json({
       message: 'User templates loaded successfully',
@@ -58,10 +58,10 @@ exports.getPaginationReports = async(req, res, next) => {
     const skipPage = parseInt(req.query.skip_page);
 
     const reports = await Report
-    .find({ created_by: req.params.user_id })
-    .sort({ created_at: 'desc' })
-    .skip((pageNumber - 1) * pageSize + skipPage)
-    .limit(pageSize);
+      .find({ created_by: req.params.user_id })
+      .sort({ created_at: 'desc' })
+      .skip((pageNumber - 1) * pageSize + skipPage)
+      .limit(pageSize);
 
     if (!reports.length) {
       return res.json({
@@ -78,6 +78,27 @@ exports.getPaginationReports = async(req, res, next) => {
     next(new Error(err));
   }
 };
+
+exports.getPaginationRequests = async(req, res, next) => {
+  try {
+    const pageNumber = parseInt(req.query.page_number);
+    const pageSize =  parseInt(req.query.page_size);
+
+    // pagination...
+    const user = await User
+      .findById(req.params.user_id)
+      .populate('approval_requests')
+      .slice('approval_requests', [(pageNumber - 1) * pageSize, pageSize]);
+
+    console.log(user);
+    res.json({
+      message: 'success',
+      reports: user.approval_requests
+    });
+  } catch(err) {
+    next(new Error(err));
+  }
+}
 
 exports.getUserTemplates = async(req, res, next) => {
   try {
