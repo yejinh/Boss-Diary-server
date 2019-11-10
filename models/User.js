@@ -31,6 +31,13 @@ const userSchema = new mongoose.Schema({
       ref: 'Template',
       required: true
     }
+  ],
+  approval_requests: [
+    {
+      type: ObjectId,
+      ref: 'Report',
+      required: true
+    }
   ]
 });
 

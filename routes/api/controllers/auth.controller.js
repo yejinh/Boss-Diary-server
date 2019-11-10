@@ -18,7 +18,8 @@ exports.authenticate = async (req, res, next) => {
         email,
         profile_photo: picture.data.url,
         resports: [],
-        templates: []
+        templates: [],
+        approval_requests: []
       }).save();
 
       const { _id } = userData;

@@ -5,9 +5,35 @@ require('dotenv').config();
 
 exports.getOne = (req, res) => {
   res.json({
-    message: 'User Found successfully',
+    message: 'User found successfully',
     userData: res.locals.userData
   });
+};
+
+exports.getOneByEmail = async(req, res, next) => {
+  try {
+    const { email } = req.params;
+
+    const user = await User.findOne({ email: email });
+
+    if (!user) {
+      return res.json({
+        message: 'User not exist',
+        userData: null
+      });
+    }
+
+    res.json({
+      message: 'User found successfully',
+      userData: {
+        _id: user._id,
+        name: user.name,
+        profilePhoto: user.profile_photo
+      }
+    });
+  } catch(err) {
+    next(new Error(err));
+  }
 };
 
 exports.getAllReports = async(req, res, next) => {
@@ -126,7 +152,7 @@ exports.create = async(req, res, next) => {
   }
 };
 
-exports.addTemplate = async(req, res) => {
+exports.addTemplate = async(req, res, next) => {
   try {
     const userId = req.params.user_id;
     const { templateId, price } = req.body;
@@ -143,6 +169,27 @@ exports.addTemplate = async(req, res) => {
     );
 
     res.json({ res: user });
+  } catch(err) {
+    next(new Error(err));
+  }
+};
+
+exports.requestApproval = async(req, res, next) => {
+  try {
+    const { user_id: userId, report_id: reportId } = req.params;
+    const user = await User.updateOne(
+      {
+        _id: userId
+      },
+      {
+        $addToSet: { approval_requests : reportId }
+      }
+    );
+
+    console.log(user);
+    res.json({
+      message: 'Approval requested successfully'
+    });
   } catch(err) {
     next(new Error(err));
   }
