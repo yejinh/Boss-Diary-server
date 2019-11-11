@@ -84,13 +84,11 @@ exports.getPaginationRequests = async(req, res, next) => {
     const pageNumber = parseInt(req.query.page_number);
     const pageSize =  parseInt(req.query.page_size);
 
-    // pagination...
     const user = await User
       .findById(req.params.user_id)
       .populate('approval_requests')
       .slice('approval_requests', [(pageNumber - 1) * pageSize, pageSize]);
 
-    console.log(user);
     res.json({
       message: 'success',
       reports: user.approval_requests
@@ -207,7 +205,6 @@ exports.requestApproval = async(req, res, next) => {
       }
     );
 
-    console.log(user);
     res.json({
       message: 'Approval requested successfully'
     });
@@ -215,3 +212,17 @@ exports.requestApproval = async(req, res, next) => {
     next(new Error(err));
   }
 };
+
+exports.delete = async(req, res, next) => {
+  try {
+    const { user_id: userId, report_id: reportId } = req.params;
+    const report = await Report.findOneAndRemove({ _id: reportId });
+    console.log(report);
+    console.log(userId, reportId);
+    res.json({
+      message: 'Report deleted successfully'
+    });
+  } catch(err) {
+    next(new Error(err));
+  }
+}
