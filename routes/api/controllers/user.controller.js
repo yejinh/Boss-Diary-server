@@ -196,12 +196,33 @@ exports.addTemplate = async(req, res, next) => {
 exports.requestApproval = async(req, res, next) => {
   try {
     const { user_id: userId, report_id: reportId } = req.params;
-    const user = await User.updateOne(
+
+    await User.updateOne(
       {
         _id: userId
       },
       {
-        $addToSet: { approval_requests : reportId }
+        $addToSet: {
+          approval_requests : reportId
+        }
+      }
+    );
+
+    await Report.updateOne(
+      {
+        _id: reportId,
+        'approvals.approved_by': { $nin: userId },
+      },
+      {
+        $push: {
+          approvals: {
+            approved_by: userId,
+            approved: false
+          }
+        }
+      },
+      {
+        new: true
       }
     );
 
@@ -210,19 +231,42 @@ exports.requestApproval = async(req, res, next) => {
     });
   } catch(err) {
     next(new Error(err));
+    console.log(err);
+  }
+};
+
+exports.confirmApproval = async(req, res, next) => {
+  try {
+    const { user_id: userId, report_id: reportId } = req.params;
+    const report = await Report.updateOne(
+      {
+        _id: reportId
+      },
+    );
+  } catch(err) {
+    next(new Error(err));
   }
 };
 
 exports.delete = async(req, res, next) => {
   try {
-    const { user_id: userId, report_id: reportId } = req.params;
-    const report = await Report.findOneAndRemove({ _id: reportId });
-    console.log(report);
-    console.log(userId, reportId);
+    const { report_id: reportId } = req.params;
+    await Report.findOneAndRemove({ _id: reportId });
+    await User.updateMany({}, {
+      $pull: {
+        reports: {
+          $in: reportId
+        },
+        approval_requests: {
+          $in: reportId
+        }
+      }
+    });
+
     res.json({
       message: 'Report deleted successfully'
     });
   } catch(err) {
     next(new Error(err));
   }
-}
+};

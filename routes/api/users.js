@@ -12,6 +12,7 @@ router.get('/:user_id/templates', ensureLoggedIn, userController.getUserTemplate
 router.post('/:user_id/reports', ensureLoggedIn, uploadS3, userController.create);
 router.put('/:user_id/templates', ensureLoggedIn, userController.addTemplate);
 router.put('/:user_id/reports/:report_id/request', ensureLoggedIn, userController.requestApproval);
+router.put('/:user_id/reports/:report_id/confirm', ensureLoggedIn, userController.confirmApproval);
 router.delete('/:user_id/reports/:report_id', ensureLoggedIn, userController.delete);
 
 module.exports = router;
