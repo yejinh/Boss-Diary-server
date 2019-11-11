@@ -238,11 +238,21 @@ exports.requestApproval = async(req, res, next) => {
 exports.confirmApproval = async(req, res, next) => {
   try {
     const { user_id: userId, report_id: reportId } = req.params;
-    const report = await Report.updateOne(
+    await Report.updateOne(
       {
-        _id: reportId
+        _id: reportId,
+        'approvals.approved_by': userId
       },
+      {
+        $set: {
+          'approvals.$.approved' : true
+        }
+      }
     );
+
+    res.json({
+      message: 'Approval confirmed successfully'
+    });
   } catch(err) {
     next(new Error(err));
   }
