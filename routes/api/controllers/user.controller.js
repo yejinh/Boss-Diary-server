@@ -145,6 +145,7 @@ exports.create = async(req, res, next) => {
     const saveReport = async(photoUrl) => {
       const newReport = await new Report({
         created_by: userId,
+        // title 받아와서 변경
         title: 'test',
         body: text,
         url: photoUrl,
