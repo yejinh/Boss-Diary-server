@@ -72,7 +72,7 @@ exports.getPaginationReports = async(req, res, next) => {
     }
 
     res.json({
-      message: sendMessage.USER_TEMPLATES_LOADED,
+      message: sendMessage.REPORTS_LOADED,
       reports: reports
     });
   } catch(err) {
@@ -104,7 +104,7 @@ exports.getUserTemplates = async(req, res, next) => {
     const user = await User.findOne({ _id: req.params.user_id }).populate('templates');
 
     res.json({
-      message: sendMessage.TEMPLATES_LOADED,
+      message: sendMessage.USER_TEMPLATES_LOADED,
       templates: user.templates
     });
   } catch(err) {

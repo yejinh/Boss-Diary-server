@@ -62,7 +62,6 @@ exports.authenticate = async (req, res, next) => {
       access_token: token
     });
   } catch(err) {
-    console.log(err);
     next(new Error(err));
   }
 };

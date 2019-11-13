@@ -9,3 +9,4 @@ exports.REPORTS_LOADED = 'User reports loaded successfully';
 exports.USER_TEMPLATES_LOADED = 'User templates loaded successfully';
 exports.APPROVAL_REQUESTED = 'Approval requested successfully';
 exports.APPROVAL_CONFIRMED = 'Approval confirmed successfully';
+exports.TEMPLATES_LOADED = 'Templates loaded successfully';
