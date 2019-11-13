@@ -1,11 +1,12 @@
 const User = require('../../../models/User');
 const Report = require('../../../models/Report');
 const AWS = require('aws-sdk');
+const sendMessage = require('../../../constants/sendMessages');
 require('dotenv').config();
 
 exports.getOne = (req, res) => {
   res.json({
-    message: 'User found successfully',
+    message: sendMessage.USER_FOUND,
     userData: res.locals.userData
   });
 };
@@ -18,13 +19,13 @@ exports.getOneByEmail = async(req, res, next) => {
 
     if (!user) {
       return res.json({
-        message: 'User not exist',
+        message: sendMessage.USER_NOT_FOUND,
         userData: null
       });
     }
 
     res.json({
-      message: 'User found successfully',
+      message: sendMessage.USER_FOUND,
       userData: {
         _id: user._id,
         name: user.name,
@@ -43,7 +44,7 @@ exports.getAllReports = async(req, res, next) => {
       .sort({ created_at: 'desc' });
 
     res.json({
-      message: 'User reports loaded successfully',
+      message: sendMessage.REPORTS_LOADED,
       reports: reports
     });
   } catch(err) {
@@ -65,13 +66,13 @@ exports.getPaginationReports = async(req, res, next) => {
 
     if (!reports.length) {
       return res.json({
-        message: 'No report found',
+        message: sendMessage.REPORT_NOT_FOUND,
         reports: []
       });
     }
 
     res.json({
-      message: 'User templates loaded successfully',
+      message: sendMessage.USER_TEMPLATES_LOADED,
       reports: reports
     });
   } catch(err) {
@@ -96,14 +97,14 @@ exports.getPaginationRequests = async(req, res, next) => {
   } catch(err) {
     next(new Error(err));
   }
-}
+};
 
 exports.getUserTemplates = async(req, res, next) => {
   try {
     const user = await User.findOne({ _id: req.params.user_id }).populate('templates');
 
     res.json({
-      message: 'User templates loaded successfully',
+      message: sendMessage.TEMPLATES_LOADED,
       templates: user.templates
     });
   } catch(err) {
@@ -163,10 +164,10 @@ exports.create = async(req, res, next) => {
       );
 
       res.json({
-        message: 'Report uploaded successfully',
+        message: sendMessage.REPORT_UPLOADED,
         newReport: newReport
       });
-    }
+    };
   } catch(err) {
     console.log(err);
     next(new Error(err));
@@ -188,7 +189,7 @@ exports.addTemplate = async(req, res, next) => {
     );
 
     res.json({
-      message: 'Template added successfully',
+      message: sendMessage.TEMPLATE_ADDED,
       userData: user
     });
   } catch(err) {
@@ -231,7 +232,7 @@ exports.requestApproval = async(req, res, next) => {
     );
 
     res.json({
-      message: 'Approval requested successfully'
+      message: sendMessage.APPROVAL_REQUESTED
     });
   } catch(err) {
     next(new Error(err));
@@ -255,7 +256,7 @@ exports.confirmApproval = async(req, res, next) => {
     );
 
     res.json({
-      message: 'Approval confirmed successfully'
+      message: sendMessage.APPROVAL_CONFIRMED
     });
   } catch(err) {
     next(new Error(err));
@@ -278,7 +279,7 @@ exports.delete = async(req, res, next) => {
     });
 
     res.json({
-      message: 'Report deleted successfully'
+      message: sendMessage.REPORT_DELETED
     });
   } catch(err) {
     next(new Error(err));

@@ -65,7 +65,8 @@ describe('/api', function() {
 
     (function checkDatabaseConnection() {
       if (db.readyState === 1) {
-        return fetchAllTemplates(done);
+        fetchAllTemplates(done);
+        return;
       }
 
       setTimeout(checkDatabaseConnection, 1000);
@@ -188,6 +189,7 @@ describe('/api', function() {
     });
   });
 
+
   /*
 
   Create New Report
@@ -195,18 +197,17 @@ describe('/api', function() {
   */
 
   describe('POST /users/:user_id/reports', () => {
-    const newReport = {
-      photo: 'http://',
-      text: 'test',
-      templateId: mockTemplates[0]._id,
-      date: new Date().toDateString()
-    };
 
     xit('should not create new report with invalid token', done => {
       request(app)
         .post(`/api/users/${AUserId}/reports`)
-        .set({ Authorization: 'Bearer fake', 'Content-Type': 'multipart/form-data' })
-        .send(newReport)
+        .set({ Authorization: 'Bearer fake', 'Content-Type': 'application/x-www-form-urlencoded' })
+        .send({
+          photo: 'http://',
+          text: 'test',
+          templateId: storedTemplates[0]._id,
+          date: new Date().toDateString()
+        })
         .end(async(err, res) => {
           if (err) return done(err);
 
@@ -221,8 +222,13 @@ describe('/api', function() {
     xit('should create new report with valid token', done => {
       request(app)
         .post(`/api/users/${AUserId}/reports`)
-        .set({ Authorization: `Bearer ${accessToken}`, 'Content-Type': 'multipart/form-data' })
-        .send(newReport)
+        .set({ Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/x-www-form-urlencoded' })
+        .send({
+          photo: 'http://',
+          text: 'test',
+          templateId: storedTemplates[0]._id,
+          date: new Date().toDateString()
+        })
         .end(async(err, res) => {
           if (err) return done(err);
           console.log(res.body, 'here?');

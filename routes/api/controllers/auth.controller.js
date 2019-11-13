@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../../../models/User');
 const { vaildEmail } = require('../../../constants/regex');
+const sendMessage = require('../../../constants/sendMessages');
 require('dotenv').config();
 
 exports.authenticate = async (req, res, next) => {
@@ -37,7 +38,7 @@ exports.authenticate = async (req, res, next) => {
       );
 
       return res.json({
-        message: 'Logged in successfully',
+        message: sendMessage.LOGGED_IN,
         user_id: _id,
         access_token: token
       });
@@ -56,7 +57,7 @@ exports.authenticate = async (req, res, next) => {
     );
 
     res.json({
-      message: 'Logged in successfully',
+      message: sendMessage.LOGGED_IN,
       user_id: user._id,
       access_token: token
     });
