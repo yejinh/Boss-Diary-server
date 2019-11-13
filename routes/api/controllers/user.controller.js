@@ -43,13 +43,13 @@ exports.getAllReports = async(req, res, next) => {
       .sort({ created_at: 'desc' });
 
     res.json({
-      message: 'User templates loaded successfully',
+      message: 'User reports loaded successfully',
       reports: reports
     });
   } catch(err) {
     next(new Error(err));
   }
-}
+};
 
 exports.getPaginationReports = async(req, res, next) => {
   try {
@@ -168,6 +168,7 @@ exports.create = async(req, res, next) => {
       });
     }
   } catch(err) {
+    console.log(err);
     next(new Error(err));
   }
 };
@@ -176,9 +177,7 @@ exports.addTemplate = async(req, res, next) => {
   try {
     const userId = req.params.user_id;
     const { templateId, price } = req.body;
-    // 템플릿 가격 빼주기
-    // 중복 체크 한번 더
-    await User.updateOne(
+    const user = await User.updateOne(
       {
         _id: userId
       },
@@ -188,8 +187,12 @@ exports.addTemplate = async(req, res, next) => {
       }
     );
 
-    res.json({ res: user });
+    res.json({
+      message: 'Template added successfully',
+      userData: user
+    });
   } catch(err) {
+    console.log(err);
     next(new Error(err));
   }
 };

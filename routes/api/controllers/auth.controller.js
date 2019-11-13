@@ -5,7 +5,7 @@ require('dotenv').config();
 
 exports.authenticate = async (req, res, next) => {
   try {
-    const { email, name, picture } = req.body;
+    const { email, name, profilePhoto } = req.body;
 
     if (!vaildEmail.test(email)) {
       throw new Error('Invaild email');
@@ -17,7 +17,7 @@ exports.authenticate = async (req, res, next) => {
       const userData = await new User({
         name,
         email,
-        profile_photo: picture.data.url,
+        profile_photo: profilePhoto,
         resports: [],
         templates: [],
         approval_requests: []
@@ -37,7 +37,7 @@ exports.authenticate = async (req, res, next) => {
       );
 
       return res.json({
-        message: 'logged in successfully',
+        message: 'Logged in successfully',
         user_id: _id,
         access_token: token
       });
@@ -56,7 +56,7 @@ exports.authenticate = async (req, res, next) => {
     );
 
     res.json({
-      message: 'logged in successfully',
+      message: 'Logged in successfully',
       user_id: user._id,
       access_token: token
     });
