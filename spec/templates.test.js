@@ -8,12 +8,6 @@ const Template = require('../models/Template');
 
 require('dotenv').config();
 
-/*
-
-Mock users
-
-*/
-
 describe('/api/templates', function() {
   this.timeout(20000);
   const mongoose = require('mongoose');

@@ -161,7 +161,6 @@ describe('/api/users', function() {
     });
 
     it('should get user data with valid token', done => {
-
       request(app)
         .get(`/api/users/${userA._id}`)
         .set({ Authorization: `Bearer ${accessTokenA}`, 'Content-Type': 'application/json' })
