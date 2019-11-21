@@ -115,7 +115,7 @@ exports.getUserTemplates = async(req, res, next) => {
 exports.create = async(req, res, next) => {
   try {
     const userId = req.params.user_id;
-    const { text, templateId, date } = req.body;
+    const { title, text, templateId, date } = req.body;
 
     const type = 'jpg';
     const buffer = req.files.photo[0].buffer;
@@ -146,8 +146,7 @@ exports.create = async(req, res, next) => {
     const saveReport = async(photoUrl) => {
       const newReport = await new Report({
         created_by: userId,
-        // title 받아와서 변경
-        title: 'test',
+        title: title,
         body: text,
         url: photoUrl,
         template_id: templateId
