@@ -33,7 +33,7 @@ jobs:
       - run:
           name: Deploy to env
           command: |
-            eb deploy boss-diary-server-development
+            eb deploy boss-diary-development
 workflows:
   version: 2
   build-deploy:
