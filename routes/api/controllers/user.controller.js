@@ -1,5 +1,6 @@
 const User = require('../../../models/User');
 const Report = require('../../../models/Report');
+const Template = require('../../../models/Template');
 const AWS = require('aws-sdk');
 const sendMessage = require('../../../constants/sendMessages');
 require('dotenv').config();
@@ -177,7 +178,7 @@ exports.addTemplate = async(req, res, next) => {
   try {
     const userId = req.params.user_id;
     const { templateId, price } = req.body;
-    const user = await User.updateOne(
+    await User.updateOne(
       {
         _id: userId
       },
@@ -187,9 +188,11 @@ exports.addTemplate = async(req, res, next) => {
       }
     );
 
+    const newTemplate = await Template.findById(templateId);
+
     res.json({
       message: sendMessage.TEMPLATE_ADDED,
-      userData: user
+      newTemplate: newTemplate
     });
   } catch(err) {
     console.log(err);

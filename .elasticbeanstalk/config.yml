@@ -1,6 +1,6 @@
 branch-defaults:
-  yejinh:
-    environment: boss-diary-development
+  dev:
+    environment: boss-diary-dev
 environment-defaults:
   www-server-development:
     branch: null

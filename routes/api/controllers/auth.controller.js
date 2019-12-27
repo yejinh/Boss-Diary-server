@@ -44,6 +44,15 @@ exports.authenticate = async (req, res, next) => {
       });
     }
 
+    await User.updateOne(
+      {
+        _id: user._id
+      },
+      {
+        $set: { profile_photo : profilePhoto }
+      }
+    );
+
     const token = jwt.sign(
       {
         email,
