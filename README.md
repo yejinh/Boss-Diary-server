@@ -6,14 +6,7 @@
 
    Boss Diary 부장님의 보고서는 사용자가 작성한 일기를 보고서 형식으로 전환시켜 관리, 저장 및 공유하는 ios기반 모바일 기기 어플리케이션 입니다.
 
-
-      1. 새로운 보고서 생성과 삭제
-
-   ![2](https://yejinh-gifs.s3.ap-northeast-2.amazonaws.com/2.gif)
-
-      2. 결재 승인 요청과 결재 승인 (공유 기능)
-
-   ![4](https://yejinh-gifs.s3.ap-northeast-2.amazonaws.com/4.gif)
+![gif](https://yejinh-gifs.s3.ap-northeast-2.amazonaws.com/%E1%84%87%E1%85%AE%E1%84%8C%E1%85%A1%E1%86%BC%E1%84%82%E1%85%B5%E1%86%B7%E1%84%8B%E1%85%B4+%E1%84%87%E1%85%A9%E1%84%80%E1%85%A9%E1%84%89%E1%85%A5.gif)
 
 
 &nbsp;
